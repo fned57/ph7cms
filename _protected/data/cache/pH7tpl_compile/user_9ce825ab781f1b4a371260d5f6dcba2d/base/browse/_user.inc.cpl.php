@@ -1,0 +1,15 @@
+<?php 
+namespace PH7;
+defined('PH7') or exit('Restricted access');
+/*
+Created on 2021-12-30 15:35:28
+Compiled file from: C:\laragon\www\ph7\templates/themes/base\tpl\browse_user.inc.tpl
+Template Engine: PH7Tpl version 1.4.1 by Pierre-Henry Soria
+*/
+/**
+ * @author     Pierre-Henry Soria
+ * @email      hello@ph7cms.com
+ * @link       https://ph7cms.com
+ * @copyright  (c) 2011-2021, Pierre-Henry Soria. All Rights Reserved.
+ */
+?><div class="box-left col-md-3 col-lg-3 col-xl-2"> <div role="search" class="design-box"> <h2><?php echo t('Quick Search'); ?></h2> <?php SearchUserCoreForm::quick(PH7_WIDTH_SEARCH_FORM) ;?> </div></div><div class="box-right col-xs-12 col-md-9 col-lg-9 col-xl-9 col-xl-offset-1"> <?php if(empty($users)) { ?> <p class="center bold"><?php echo t('Whoops! No users found.'); ?></p> <?php } else { ?> <?php foreach($users as $user) { ?> <?php $country_name = t($user->country) ;?> <?php $age = UserBirthDateCore::getAgeFromBirthDate($user->birthDate) ;?> <div class="col-xs-6 col-md-4 col-lg-3 thumb_photo"> <?php UserDesignCoreModel::userStatus($user->profileId) ;?> <?php if($user->sex === GenderTypeUserCore::MALE) { ?> <?php $sex_ico = ' <span class=green>&#9794;</span>' ;?> <?php } elseif($user->sex === GenderTypeUserCore::FEMALE) { ?> <?php $sex_ico = ' <span class=pink>&#9792;</span>' ;?> <?php } else { ?> <?php $sex_ico = '' ;?> <?php } ?> <figure> <?php $avatarDesign->get($user->username, $user->firstName, $user->sex, 150) ;?> <figcaption class="cy_ico"> <a href="<?php echo (new UserCore)->getProfileLink($user->username) ;?>" title="<?php echo t('Name: %0%', $user->firstName); ?><br> <?php echo t('Gender: %0% %1%', t($user->sex), $sex_ico); ?><br> <?php echo t('Seeking: %0%', t($user->matchSex)); ?><br> <?php echo t('Age: %0%', $age); ?><br> <?php echo t('From: %0%', $country_name); ?><br> <?php echo t('City: %0%', $this->str->upperFirst($user->city)); ?><br> <?php echo t('State: %0%', $this->str->upperFirst($user->state)); ?>"> <strong><?php echo $this->str->extract($user->username, PH7_MAX_USERNAME_LENGTH_SHOWN) ;?></strong> </a> <img src="<?php $design->getSmallFlagIcon($user->country) ;?>" alt="<?php echo $country_name; ?>" title="<?php echo t('From %0%', $country_name); ?>" /> </figcaption> </figure> <?php if($is_admin_auth) { ?> <p class="small"> <a href="<?php $design->url(PH7_ADMIN_MOD,'user','loginuseras',$user->profileId) ;?>" title="<?php echo t('Login As a member'); ?>"><?php echo t('Login'); ?></a> • <?php if($user->ban == UserCore::BAN_STATUS) { ?> <?php $design->popupLinkConfirm(t('UnBan'), PH7_ADMIN_MOD, 'user', 'unban', $user->profileId) ;?> <?php } else { ?> <?php $design->popupLinkConfirm(t('Ban'), PH7_ADMIN_MOD, 'user', 'ban', $user->profileId) ;?> <?php } ?> • <br /><?php $design->popupLinkConfirm(t('Delete'), PH7_ADMIN_MOD, 'user', 'delete', $user->profileId.'_'.$user->username) ;?> • <?php $design->ip($user->ip) ;?> </p> <?php } ?> </div> <?php } ?> <?php $this->display('page_nav.inc.tpl', PH7_PATH_TPL . PH7_TPL_NAME . PH7_DS); ?> <?php } ?></div>
